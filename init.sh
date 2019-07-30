@@ -32,10 +32,6 @@ systemctl restart sshd
 # install ntp ntpdate
 yum install ntp ntpdate -y
 ntpdate pool.ntp.org
-systemctl restart ntpdate.service
-systemctl restart ntpd.service
-systemctl enable ntpd.service
-systemctl enable ntpdate.service
 
 # disable firewall
 systemctl disable firewalld

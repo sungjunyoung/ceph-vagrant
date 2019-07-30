@@ -38,6 +38,7 @@ ceph_node8_disk2 = 'ceph-node8/ceph-node8_disk2.vdi'
 ceph_node8_disk3 = 'ceph-node8/ceph-node8_disk3.vdi'
 ceph_node8_disk4 = 'ceph-node8/ceph-node8_disk4.vdi'
 
+client_host= 'client-node1'
 
 Vagrant.configure(2) do |config|
     config.vm.define :"ceph-node1" do |node1|
@@ -121,4 +122,18 @@ Vagrant.configure(2) do |config|
             end
         end
     end
+
+    config.vm.define :"client-node1" do |os|
+        os.vm.box = "centos/7"
+        os.vm.network :private_network, ip: "192.168.56.110"
+        os.vm.hostname = client_host
+        os.vm.synced_folder ".", "/vagrant", disabled: true
+        os.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+        os.vm.provision "shell", path: "init.sh", run: "always"
+        os.vm.provider "virtualbox" do |v|
+            v.customize ["modifyvm", :id, "--memory", "512"]
+            v.name = client_host
+            v.gui = false
+    end
+end
 end
